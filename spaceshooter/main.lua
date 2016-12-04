@@ -18,14 +18,14 @@ local waveProgress = 1
 local numHit = 0
 local shipMoveX = 0
 local ship 
-local speed = 6 
+local speed = 20 
 local shootbtn
 local numEnemy = 0
 local enemyArray = {}
 local onCollision
 local score = 0
 local gameovertxt
-local numBullets = 3
+local numBullets = 15
 local ammo
 local AmmoActive = true
 
@@ -106,6 +106,42 @@ local backgroundsnd = audio.loadStream ( "musicbackground.mp3")
 		end
 	end
 	
+	-- this will be the PC controls
+	-- Called when a key event has been received
+	local function onKeyEvent( event )
+		
+
+		-- If the "back" key was pressed on Android or Windows Phone, prevent it from backing out of the app
+		if ( event.keyName == "left" ) then
+			
+				ship.x = ship.x - speed
+			
+		
+		elseif(event.keyName == "right") then
+			ship.x = ship.x + speed
+		end
+		if(event.keyName == "space") then
+			if (numBullets ~= 0) then
+			numBullets = numBullets - 1
+			local bullet = display.newImage("bullet.png")
+			physics.addBody(bullet, "static", {density = 1, friction = 0, bounce = 0});
+			bullet.x = ship.x 
+			bullet.y = ship.y 
+			bullet.myName = "bullet"
+			textBullets.text = "Bullets "..numBullets
+			transition.to ( bullet, { time = 1000, x = ship.x, y =-100} )
+			audio.play(shot)
+		end 
+		end 
+
+		-- IMPORTANT! Return false to indicate that this app is NOT overriding the received key
+		-- This lets the operating system execute its default handling of the key
+		return false
+	end
+
+	-- Add the key event listener
+	
+		
 function createShip()
 	ship = display.newImage ("ship.png")
 	physics.addBody(ship, "static", {density = 1, friction = 0, bounce = 0});
@@ -331,6 +367,7 @@ Runtime:addEventListener("enterFrame", createWalls)
 Runtime:addEventListener("enterFrame", moveShip)
 Runtime:addEventListener("touch", stopShip)
 Runtime:addEventListener("collision" , onCollision)
+Runtime:addEventListener( "key", onKeyEvent )
 
 timer.performWithDelay(5000, ammoStatus,0)
 timer.performWithDelay ( 5000, setAmmoOn, 0 )

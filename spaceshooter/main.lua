@@ -354,7 +354,17 @@ function backgroundMusic()
 	audio.play (backgroundsnd, { loops = -1})
 	audio.setVolume(0.5, {backgroundsnd} ) 	
 end
-
+-- outline code for state machine conditions
+function gameLoop()
+	 
+	if then
+	elseif then
+	elseif then 
+	else then
+		----add things for easy mode aka intial mode
+		
+	end
+end
 -- heart of the game
 function startGame()
 createShip()
@@ -368,6 +378,7 @@ Runtime:addEventListener("enterFrame", moveShip)
 Runtime:addEventListener("touch", stopShip)
 Runtime:addEventListener("collision" , onCollision)
 Runtime:addEventListener( "key", onKeyEvent )
+Runtime:addEventListener("enterFrame", gameLoop)
 
 timer.performWithDelay(5000, ammoStatus,0)
 timer.performWithDelay ( 5000, setAmmoOn, 0 )

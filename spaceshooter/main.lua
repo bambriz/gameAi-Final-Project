@@ -22,6 +22,7 @@ local speed = 20
 local shootbtn
 local numEnemy = 0
 local enemyArray = {}
+--add enemy arrays for other types of enemies
 local onCollision
 local score = 0
 local gameovertxt
@@ -154,7 +155,7 @@ function createEnemy()
 	print(numEnemy)
 			enemies:toFront()
 			enemyArray[numEnemy]  = display.newImage("enemy.png")
-			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=0})
+			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=1})
 			enemyArray[numEnemy] .myName = "enemy" 
 			startlocationX = math.random (0, display.contentWidth)
 			enemyArray[numEnemy] .x = startlocationX
@@ -174,7 +175,7 @@ function createAmmo()
 		ammo .x = startlocationX
 		startlocationY = math.random (-500, -100)
 		ammo .y = startlocationY
-		
+		ammo.rotation = 0
 		transition.to ( ammo, {time = math.random (5000, 10000 ), x= math.random (0, display.contentWidth ), y=ship.y+500 } ) 
 	
 		local function rotationAmmo ()
@@ -354,14 +355,14 @@ function backgroundMusic()
 end
 -- outline code for state machine conditions
 function gameLoop()
-	 
-	if then
-	elseif then
-	elseif then 
-	else then
+
+--	if then
+	--elseif then
+	--elseif then 
+	--else then
 		----add things for easy mode aka intial mode
 		
-	end
+	--end 
 end
 -- heart of the game
 function startGame()

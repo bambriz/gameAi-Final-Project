@@ -124,18 +124,11 @@ local backgroundsnd = audio.loadStream ( "musicbackground.mp3")
 			ship.x = ship.x + speed
 		end
 
-<<<<<<< HEAD
-		if(event.keyName == "space") then
-			--if (numBullets ~= 0) then
+
+		
+		if(event.keyName == "space") and(totalBull <3) then
 			--numBullets = numBullets - 1
 
-		if(event.keyName == "space") and (totalBull <3) then
-			--numBullets = numBullets - 1
-
-=======
-		if(event.keyName == "space") and (numBullets ~= 0) then
-			numBullets = numBullets - 1
->>>>>>> origin/master
 			local bullet = display.newImage("bullet.png")
 			physics.addBody(bullet, "static", {density = 1, friction = 0, bounce = 0});
 			totalBull = totalBull +1
@@ -145,22 +138,21 @@ local backgroundsnd = audio.loadStream ( "musicbackground.mp3")
 			bullet.myName = "bullet"
 			textBullets.text = "Bullets "..numBullets
 			transition.to ( bullet, { time = 1000, x = ship.x, y =-100} )
-<<<<<<< HEAD
+
 			table.insert(bullArray,bullet)
 
 			audio.play(shot)
 		end
 
-=======
-			audio.play(shot)
 		--end 
->>>>>>> origin/master
-		end 
+
+		
 
 		-- IMPORTANT! Return false to indicate that this app is NOT overriding the received key
 		-- This lets the operating system execute its default handling of the key
 		return false
 	end
+	 
 
 	-- Add the key event listener
 	

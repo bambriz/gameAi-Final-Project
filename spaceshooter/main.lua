@@ -330,7 +330,7 @@ local function checkforProgress()
 			textWave.text = "Wave: "..waveProgress
 			print("wavenumber "..waveProgress)
 			waveTxt:addEventListener("tap",  nextWave)
-end
+		end
 	
 	-- remove enemies which are not shot
 	

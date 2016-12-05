@@ -154,7 +154,7 @@ function createEnemy()
 
 	print(numEnemy)
 			enemies:toFront()
-			enemyArray[numEnemy]  = display.newImage("asteroid.png")
+			enemyArray[numEnemy]  = display.newImage("asteroid_small.png")
 			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=1})
 			enemyArray[numEnemy] .myName = "enemy" 
 			startlocationX = math.random (0, display.contentWidth)

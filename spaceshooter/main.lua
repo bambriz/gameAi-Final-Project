@@ -121,8 +121,14 @@ local backgroundsnd = audio.loadStream ( "musicbackground.mp3")
 		elseif(event.keyName == "right") then
 			ship.x = ship.x + speed
 		end
+<<<<<<< HEAD
+		if(event.keyName == "space") then
+			--if (numBullets ~= 0) then
+			--numBullets = numBullets - 1
+=======
 		if(event.keyName == "space") and (numBullets ~= 0) then
 			numBullets = numBullets - 1
+>>>>>>> origin/master
 			local bullet = display.newImage("bullet.png")
 			physics.addBody(bullet, "static", {density = 1, friction = 0, bounce = 0});
 			bullet.x = ship.x 
@@ -130,7 +136,12 @@ local backgroundsnd = audio.loadStream ( "musicbackground.mp3")
 			bullet.myName = "bullet"
 			textBullets.text = "Bullets "..numBullets
 			transition.to ( bullet, { time = 1000, x = ship.x, y =-100} )
+<<<<<<< HEAD
+			audio.play(shot)
+		--end 
+=======
 			audio.play(shot) 
+>>>>>>> origin/master
 		end 
 
 		-- IMPORTANT! Return false to indicate that this app is NOT overriding the received key
@@ -183,9 +194,9 @@ function createAmmo()
 				ammo.rotation = ammo.rotation + 45
 			end
 		end
-
-		rotationTimer = timer.performWithDelay(200, rotationAmmo, -1)
-		
+		if(ammo.rotation ~= nil) then
+			rotationTimer = timer.performWithDelay(200, rotationAmmo, -1)
+		end
 		
 end
 
@@ -319,7 +330,7 @@ end
 
 
 local function checkforProgress()
-		if numHit == waveProgress then
+		if numHit == (waveProgress*2+1) then
 			gameActive = false
 			audio.play(wavesnd)
 			removeEnemies()

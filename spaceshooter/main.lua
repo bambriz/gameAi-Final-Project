@@ -154,7 +154,7 @@ function createEnemy()
 
 	print(numEnemy)
 			enemies:toFront()
-			enemyArray[numEnemy]  = display.newImage("enemy.png")
+			enemyArray[numEnemy]  = display.newImage("asteroid.png")
 			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=1})
 			enemyArray[numEnemy] .myName = "enemy" 
 			startlocationX = math.random (0, display.contentWidth)
@@ -179,7 +179,9 @@ function createAmmo()
 		transition.to ( ammo, {time = math.random (5000, 10000 ), x= math.random (0, display.contentWidth ), y=ship.y+500 } ) 
 	
 		local function rotationAmmo ()
-		ammo.rotation = ammo.rotation + 45
+			if ammo.rotation ~=nil then
+				ammo.rotation = ammo.rotation + 45
+			end
 		end
 
 		rotationTimer = timer.performWithDelay(200, rotationAmmo, -1)

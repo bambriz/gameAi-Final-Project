@@ -22,6 +22,8 @@ local speed = 20
 local shootbtn
 local numEnemy = 0
 local enemyArray = {}
+local totalBull = 0
+local bullArray = {}
 --add enemy arrays for other types of enemies
 local onCollision
 local score = 0
@@ -121,27 +123,28 @@ local backgroundsnd = audio.loadStream ( "musicbackground.mp3")
 		elseif(event.keyName == "right") then
 			ship.x = ship.x + speed
 		end
-<<<<<<< HEAD
+
 		if(event.keyName == "space") then
 			--if (numBullets ~= 0) then
 			--numBullets = numBullets - 1
-=======
-		if(event.keyName == "space") and (numBullets ~= 0) then
-			numBullets = numBullets - 1
->>>>>>> origin/master
+
+		if(event.keyName == "space") and (totalBull <3) then
+			--numBullets = numBullets - 1
+
 			local bullet = display.newImage("bullet.png")
 			physics.addBody(bullet, "static", {density = 1, friction = 0, bounce = 0});
+			totalBull = totalBull +1
+			
 			bullet.x = ship.x 
 			bullet.y = ship.y 
 			bullet.myName = "bullet"
 			textBullets.text = "Bullets "..numBullets
 			transition.to ( bullet, { time = 1000, x = ship.x, y =-100} )
-<<<<<<< HEAD
+			table.insert(bullArray,bullet)
+
 			audio.play(shot)
-		--end 
-=======
-			audio.play(shot) 
->>>>>>> origin/master
+		end
+
 		end 
 
 		-- IMPORTANT! Return false to indicate that this app is NOT overriding the received key
@@ -250,17 +253,29 @@ function onCollision(event)
 		
 	end
 
-	if((event.object1.myName=="enemy" and event.object2.myName=="bullet") or 
-		(event.object1.myName=="bullet" and event.object2.myName=="enemy")) then
+	if(event.object1.myName=="enemy" and event.object2.myName=="bullet")  then
 			event.object1:removeSelf()
 			event.object1.myName=nil
+			--event.object2:removeSelf()
+			--event.object2.myName=nil
+			score = score + 10
+			textScore.text = "Score: "..score
+			numHit = numHit + 1
+			--totalBull = totalBull -1
+			print ("numhit "..numHit)
+	end
+	
+		if(event.object1.myName=="bullet" and event.object2.myName=="enemy") then
+			--event.object1:removeSelf()
+			--event.object1.myName=nil
 			event.object2:removeSelf()
 			event.object2.myName=nil
 			score = score + 10
 			textScore.text = "Score: "..score
 			numHit = numHit + 1
+			--totalBull = totalBull -1
 			print ("numhit "..numHit)
-			end
+		end
 	
 	
 end
@@ -368,7 +383,15 @@ function backgroundMusic()
 end
 -- outline code for state machine conditions
 function gameLoop()
-
+	if(#bullArray ~= 0) then
+		for i = 1, #bullArray do
+			if(bullArray[i].y < 0) then
+				table.remove(bullArray,i)
+				totalBull = totalBull -1
+				break
+			end
+		end
+	end
 --	if then
 	--elseif then
 	--elseif then 

@@ -571,7 +571,7 @@ local function aplyCurve( )
 	numberofticks=numberofticks+1
 	--print("numberofticks: "..numberofticks)
 	for i =1, #enemyArray do
-		if (enemyArray[i].myName ~= nil) and (enemyArray[i].myName=="curvingEnemy")then
+		if (enemyArray[i].myName ~= nil) and (enemyArray[i].myName=="curvingEnemy" or string.find(enemyArray[i].myName, "Curving") )then
 			--print("giving the curve")
 			enemyArray[i].x = enemyArray[i].x + math.sin(numberofticks /100 * math.pi) * 200
 			--print('curve given is ' .. math.sin(numberofticks /180 * math.pi) * 30)
@@ -651,7 +651,7 @@ function gameLoop()
 	elseif(state == "medium") then
 		ammoOk = false
 		curveOk = true
-		curveMod = 1
+		curveMod = 5
 		scoreMod = 2
 		maxShots = 3
 		maxSpawn = 3
@@ -659,7 +659,7 @@ function gameLoop()
 		ammoOk = true
 		curveOk = true
 		curveMod = math.floor(math.random(1,5))
-		scoreMod = 3
+		scoreMod = 2
 		maxShots = 2
 		maxSpawn = math.floor(math.log(score/100)/math.log(2))
 	end 
@@ -694,12 +694,12 @@ bdis = display.newText(  "Best Score: "..bestScore, 80, 150, nil, 20 )
 
 
 --createCurvingEnemy()
-createSmallEnemy()
-createMediumEnemy()
-createLargeEnemy()
-createSmallCurvingEnemy()
-createMediumCurvingEnemy()
-createLargeCurvingEnemy()
+--createSmallEnemy()
+--createMediumEnemy()
+--createLargeEnemy()
+--createSmallCurvingEnemy()
+--createMediumCurvingEnemy()
+--createLargeCurvingEnemy()
 
 
 shootbtn:addEventListener ( "tap", shoot )

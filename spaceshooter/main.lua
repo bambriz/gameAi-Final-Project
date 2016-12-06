@@ -498,11 +498,25 @@ function ammoStatus()
 	
 	if gameActive then
 		for i =1, maxSpawn do
-			createEnemy()
+			rand=math.random(0,3)
+			if rand==0 then
+				createSmallEnemy()
+			elseif rand ==1 then
+				createMediumEnemy()
+			else
+				createLargeEnemy()
+			end
 		end
 		if(curveOk) then
 			for i=1, maxSpawn-2 do
-				createCurvingEnemy()
+				rand=math.random(0,3)
+				if rand==0 then
+					createSmallCurvingEnemy()
+				elseif rand ==1 then
+					createMediumCurvingEnemy()
+				else
+					createLargeCurvingEnemy()
+				end
 			end
 		end
 		if AmmoActive and ammoOk then
@@ -647,12 +661,16 @@ end
 function startGame()
 createShip()
 --backgroundMusic()
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
 createCurvingEnemy()
 did = display.newText(  "Difficulty: "..state, 50, 100, nil, 12 )
 cheese = display.newText(  "Time: "..timeKeepMin..": "..(timeKeepSec%60), 50, 125, nil, 20 )
 bdis = display.newText(  "Best Score: "..bestScore, 80, 150, nil, 20 )
 
+<<<<<<< HEAD
 --createCurvingEnemy()
 createSmallEnemy()
 createMediumEnemy()
@@ -660,6 +678,8 @@ createLargeEnemy()
 createSmallCurvingEnemy()
 createMediumCurvingEnemy()
 createLargeCurvingEnemy()
+=======
+>>>>>>> origin/master
 
 shootbtn:addEventListener ( "tap", shoot )
 rightArrow:addEventListener ("touch", rightArrowtouch)

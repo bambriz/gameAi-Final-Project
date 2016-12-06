@@ -13,6 +13,8 @@ physics.setGravity( 0,0)
 local enemies = display.newGroup()
 
 -- global variables
+-- global variables
+local numberofticks = 0
 local gameActive = true
 local waveProgress = 1
 local numHit = 0
@@ -36,6 +38,7 @@ local AmmoActive = true
 local removeEnemies
 local createGame
 local createEnemy
+local createCurvingEnemy
 local shoot
 local createShip
 local newGame
@@ -175,11 +178,26 @@ function createShip()
 	ship.y = display.contentHeight - 80
 	ship.myName = "ship"
 end
+function createCurvingEnemy( )
+	numEnemy = numEnemy +1 
+	print("new curving enemy respawned :"..numEnemy)
+		  	enemies	:toFront()
+			enemyArray[numEnemy]  = display.newImage("asteroid_small.png")
+			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=1})
+			enemyArray[numEnemy] .myName = "curvingEnemy" 
+			startlocationX = math.random (0, display.contentWidth)
+			enemyArray[numEnemy] .x = startlocationX
+			startlocationY = math.random (-500, -100)
+			enemyArray[numEnemy] .y = startlocationY
+		
+			transition.to ( enemyArray[numEnemy] , { time = math.random (12000, 20000), x= math.random (0, display.contentWidth ), y=ship.y+500 } )
+			enemies:insert(enemyArray[numEnemy] )
+end
 
 function createEnemy()
 	numEnemy = numEnemy +1 
 
-	print(numEnemy)
+	print("new enemy respawned :"..numEnemy)
 			enemies:toFront()
 			enemyArray[numEnemy]  = display.newImage("asteroid_small.png")
 			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=1})
@@ -188,7 +206,7 @@ function createEnemy()
 			enemyArray[numEnemy] .x = startlocationX
 			startlocationY = math.random (-500, -100)
 			enemyArray[numEnemy] .y = startlocationY
-		
+			
 			transition.to ( enemyArray[numEnemy] , { time = math.random (12000, 20000), x= math.random (0, display.contentWidth ), y=ship.y+500 } )
 			enemies:insert(enemyArray[numEnemy] )
 end
@@ -234,7 +252,7 @@ end
  
 
 function onCollision(event)
-	if(event.object1.myName =="ship" and event.object2.myName =="enemy") then	
+	if(event.object1.myName =="ship" and (event.object2.myName=="enemy" or event.object2.myName=="curvingEnemy" )) then	
 			
 			
 			local function setgameOver()
@@ -266,7 +284,7 @@ function onCollision(event)
 		
 	end
 
-	if(event.object1.myName=="enemy" and event.object2.myName=="bullet")  then
+	if((event.object1.myName=="enemy" or event.object1.myName=="curvingEnemy" ) and event.object2.myName=="bullet")  then
 			event.object1:removeSelf()
 			event.object1.myName=nil
 			--event.object2:removeSelf()
@@ -278,7 +296,7 @@ function onCollision(event)
 			print ("numhit "..numHit)
 	end
 	
-		if(event.object1.myName=="bullet" and event.object2.myName=="enemy") then
+		if(event.object1.myName=="bullet" and (event.object2.myName=="enemy" or event.object2.myName=="curvingEnemy" )) then
 			--event.object1:removeSelf()
 			--event.object1.myName=nil
 			event.object2:removeSelf()
@@ -356,6 +374,17 @@ function ammoStatus()
 	
 end
 
+local function aplyCurve( )
+	numberofticks=numberofticks+1
+	--print("numberofticks: "..numberofticks)
+	for i =1, #enemyArray do
+		if (enemyArray[i].myName ~= nil) and (enemyArray[i].myName=="curvingEnemy")then
+			--print("giving the curve")
+			enemyArray[i].x = enemyArray[i].x + math.sin(numberofticks /100 * math.pi) * 200
+			print('curve given is ' .. math.sin(numberofticks /180 * math.pi) * 30)
+		end
+	end
+end
 
 local function checkforProgress()
 		if numHit == (waveProgress*2+1) then
@@ -416,7 +445,8 @@ end
 -- heart of the game
 function startGame()
 createShip()
-backgroundMusic()
+--backgroundMusic()
+createCurvingEnemy()
 
 shootbtn:addEventListener ( "tap", shoot )
 rightArrow:addEventListener ("touch", rightArrowtouch)
@@ -431,6 +461,9 @@ Runtime:addEventListener("enterFrame", gameLoop)
 timer.performWithDelay(5000, ammoStatus,0)
 timer.performWithDelay ( 5000, setAmmoOn, 0 )
 timer.performWithDelay(300, checkforProgress,0)
+timer.performWithDelay(10, aplyCurve,0)
+
+
 
 end
 

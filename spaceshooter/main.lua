@@ -45,8 +45,16 @@ local AmmoActive = true
 -- global functions
 local removeEnemies
 local createGame
+--enemy
 local createEnemy
+local createSmallEnemy
+local createMediumEnemy
+local createLargeEnemy
 local createCurvingEnemy
+local createSmallCurvingEnemy
+local createMediumCurvingEnemy
+local createLargeCurvingEnemy
+
 local shoot
 local createShip
 local newGame
@@ -211,7 +219,52 @@ function createCurvingEnemy( )
 	numEnemy = numEnemy +1 
 	print("new curving enemy respawned :"..numEnemy)
 		  	enemies	:toFront()
+			enemyArray[numEnemy]  = display.newImage("asteroid_large.png")
+			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=1})
+			enemyArray[numEnemy] .myName = "curvingEnemy" 
+			startlocationX = math.random (0, display.contentWidth)
+			enemyArray[numEnemy] .x = startlocationX
+			startlocationY = math.random (-500, -100)
+			enemyArray[numEnemy] .y = startlocationY
+		
+			transition.to ( enemyArray[numEnemy] , { time = math.random (2000, 8000), x= math.random (0, display.contentWidth ), y=ship.y+500 } )
+			enemies:insert(enemyArray[numEnemy] )
+end
+function createSmallCurvingEnemy( )
+	numEnemy = numEnemy +1 
+	print("new curving enemy respawned :"..numEnemy)
+		  	enemies	:toFront()
 			enemyArray[numEnemy]  = display.newImage("asteroid_small.png")
+			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=1})
+			enemyArray[numEnemy] .myName = "curvingEnemy" 
+			startlocationX = math.random (0, display.contentWidth)
+			enemyArray[numEnemy] .x = startlocationX
+			startlocationY = math.random (-500, -100)
+			enemyArray[numEnemy] .y = startlocationY
+		
+			transition.to ( enemyArray[numEnemy] , { time = math.random (2000, 8000), x= math.random (0, display.contentWidth ), y=ship.y+500 } )
+			enemies:insert(enemyArray[numEnemy] )
+end
+function createMediumCurvingEnemy( )
+	numEnemy = numEnemy +1 
+	print("new curving enemy respawned :"..numEnemy)
+		  	enemies	:toFront()
+			enemyArray[numEnemy]  = display.newImage("asteroid_medium.png")
+			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=1})
+			enemyArray[numEnemy] .myName = "curvingEnemy" 
+			startlocationX = math.random (0, display.contentWidth)
+			enemyArray[numEnemy] .x = startlocationX
+			startlocationY = math.random (-500, -100)
+			enemyArray[numEnemy] .y = startlocationY
+		
+			transition.to ( enemyArray[numEnemy] , { time = math.random (2000, 8000), x= math.random (0, display.contentWidth ), y=ship.y+500 } )
+			enemies:insert(enemyArray[numEnemy] )
+end
+function createLargeCurvingEnemy( )
+	numEnemy = numEnemy +1 
+	print("new curving enemy respawned :"..numEnemy)
+		  	enemies	:toFront()
+			enemyArray[numEnemy]  = display.newImage("asteroid_large.png")
 			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=1})
 			enemyArray[numEnemy] .myName = "curvingEnemy" 
 			startlocationX = math.random (0, display.contentWidth)
@@ -228,9 +281,60 @@ function createEnemy()
 
 	print("new enemy respawned :"..numEnemy)
 			enemies:toFront()
-			enemyArray[numEnemy]  = display.newImage("asteroid_small.png")
+			enemyArray[numEnemy]  = display.newImage("asteroid_medium.png")
 			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=1})
 			enemyArray[numEnemy] .myName = "enemy" 
+			startlocationX = math.random (0, display.contentWidth)
+			enemyArray[numEnemy] .x = startlocationX
+			startlocationY = math.random (-100, -25)
+			enemyArray[numEnemy] .y = startlocationY
+			
+			transition.to ( enemyArray[numEnemy] , { time = math.random (8000, 15000), x= math.random (0, display.contentWidth ), y=ship.y+500 } )
+			enemies:insert(enemyArray[numEnemy] )
+end
+
+function createLargeEnemy()
+	numEnemy = numEnemy +1 
+
+	print("new enemy respawned :"..numEnemy)
+			enemies:toFront()
+			enemyArray[numEnemy]  = display.newImage("asteroid_large.png")
+			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=1})
+			enemyArray[numEnemy] .myName = "largeEnemy" 
+			startlocationX = math.random (0, display.contentWidth)
+			enemyArray[numEnemy] .x = startlocationX
+			startlocationY = math.random (-100, -25)
+			enemyArray[numEnemy] .y = startlocationY
+			
+			transition.to ( enemyArray[numEnemy] , { time = math.random (8000, 15000), x= math.random (0, display.contentWidth ), y=ship.y+500 } )
+			enemies:insert(enemyArray[numEnemy] )
+end
+
+function createMediumEnemy()
+	numEnemy = numEnemy +1 
+
+	print("new enemy respawned :"..numEnemy)
+			enemies:toFront()
+			enemyArray[numEnemy]  = display.newImage("asteroid_medium.png")
+			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=1})
+			enemyArray[numEnemy] .myName = "mediumEnemy" 
+			startlocationX = math.random (0, display.contentWidth)
+			enemyArray[numEnemy] .x = startlocationX
+			startlocationY = math.random (-100, -25)
+			enemyArray[numEnemy] .y = startlocationY
+			
+			transition.to ( enemyArray[numEnemy] , { time = math.random (8000, 15000), x= math.random (0, display.contentWidth ), y=ship.y+500 } )
+			enemies:insert(enemyArray[numEnemy] )
+end
+
+function createSmallEnemy()
+	numEnemy = numEnemy +1 
+
+	print("new enemy respawned :"..numEnemy)
+			enemies:toFront()
+			enemyArray[numEnemy]  = display.newImage("asteroid_small.png")
+			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=1})
+			enemyArray[numEnemy] .myName = "smallEnemy" 
 			startlocationX = math.random (0, display.contentWidth)
 			enemyArray[numEnemy] .x = startlocationX
 			startlocationY = math.random (-100, -25)
@@ -281,7 +385,7 @@ end
  
 
 function onCollision(event)
-	if(event.object1.myName =="ship" and (event.object2.myName=="enemy" or event.object2.myName=="curvingEnemy" )) then	
+	if(event.object1.myName =="ship" and (event.object2.myName=="enemy" or string.find(event.object2.myName, "Enemy") )) then	
 			
 			
 			--local function setgameOver()
@@ -319,7 +423,7 @@ function onCollision(event)
 		
 	end
 
-	if((event.object1.myName=="enemy" or event.object1.myName=="curvingEnemy" ) and event.object2.myName=="bullet")  then
+	if((event.object1.myName=="enemy" or string.find(event.object1.myName, "Enemy")) and event.object2.myName=="bullet")  then
 			event.object1:removeSelf()
 			event.object1.myName=nil
 			--event.object2:removeSelf()
@@ -331,7 +435,7 @@ function onCollision(event)
 			print ("numhit "..numHit)
 	end
 	
-		if(event.object1.myName=="bullet" and (event.object2.myName=="enemy" or event.object2.myName=="curvingEnemy" )) then
+		if(event.object1.myName=="bullet" and (event.object2.myName=="enemy" or string.find(event.object2.myName, "Enemy") )) then
 			--event.object1:removeSelf()
 			--event.object1.myName=nil
 			event.object2:removeSelf()
@@ -423,7 +527,7 @@ local function aplyCurve( )
 		if (enemyArray[i].myName ~= nil) and (enemyArray[i].myName=="curvingEnemy")then
 			--print("giving the curve")
 			enemyArray[i].x = enemyArray[i].x + math.sin(numberofticks /100 * math.pi) * 200
-			print('curve given is ' .. math.sin(numberofticks /180 * math.pi) * 30)
+			--print('curve given is ' .. math.sin(numberofticks /180 * math.pi) * 30)
 		end
 	end
 end
@@ -518,7 +622,13 @@ end
 function startGame()
 createShip()
 --backgroundMusic()
-createCurvingEnemy()
+--createCurvingEnemy()
+createSmallEnemy()
+createMediumEnemy()
+createLargeEnemy()
+createSmallCurvingEnemy()
+createMediumCurvingEnemy()
+createLargeCurvingEnemy()
 
 shootbtn:addEventListener ( "tap", shoot )
 rightArrow:addEventListener ("touch", rightArrowtouch)

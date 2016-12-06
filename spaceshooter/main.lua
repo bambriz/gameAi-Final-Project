@@ -647,12 +647,12 @@ end
 function startGame()
 createShip()
 --backgroundMusic()
-<<<<<<< HEAD
+
 createCurvingEnemy()
 did = display.newText(  "Difficulty: "..state, 50, 100, nil, 12 )
 cheese = display.newText(  "Time: "..timeKeepMin..": "..(timeKeepSec%60), 50, 125, nil, 20 )
 bdis = display.newText(  "Best Score: "..bestScore, 80, 150, nil, 20 )
-=======
+
 --createCurvingEnemy()
 createSmallEnemy()
 createMediumEnemy()
@@ -661,7 +661,6 @@ createSmallCurvingEnemy()
 createMediumCurvingEnemy()
 createLargeCurvingEnemy()
 
->>>>>>> origin/master
 shootbtn:addEventListener ( "tap", shoot )
 rightArrow:addEventListener ("touch", rightArrowtouch)
 leftArrow:addEventListener("touch", leftArrowtouch)

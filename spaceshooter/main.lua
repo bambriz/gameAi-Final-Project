@@ -34,6 +34,12 @@ local curveOk = false
 local ammoOk = false
 local scoreMod = 1
 local maxSpawn = 2
+local timeKeepSec = 0
+local timeKeepMin = 0
+local did
+local cheese
+local bestScore = 0
+local bdis
 --add enemy arrays for other types of enemies
 local onCollision
 local score = 0
@@ -56,6 +62,7 @@ local checkforProgress
 local createAmmo
 local setAmmoOn
 local backgroundMusic
+local timeKeep
 
 --- audio
 local shot = audio.loadSound ("laserbeam.mp3")
@@ -235,6 +242,7 @@ function createEnemy()
 			enemyArray[numEnemy] .x = startlocationX
 			startlocationY = math.random (-100, -25)
 			enemyArray[numEnemy] .y = startlocationY
+			
 			
 			transition.to ( enemyArray[numEnemy] , { time = math.random (8000, 15000), x= math.random (0, display.contentWidth ), y=ship.y+500 } )
 			enemies:insert(enemyArray[numEnemy] )
@@ -467,6 +475,7 @@ function backgroundMusic()
 end
 -- outline code for state machine conditions
 function gameLoop()
+    bestScore = math.max(bestScore,score)
 	if(#bullArray ~= 0) then
 		for i = 1, #bullArray do
 			if(bullArray[i].y < 0) then
@@ -512,6 +521,22 @@ function gameLoop()
 		maxSpawn = 5
 	end 
 	moveShip()
+	 
+end
+--time keeper
+function timeKeep()
+	display.remove(did)
+	did = display.newText(  "Difficulty: "..state, 50, 100, nil, 12 )
+	
+	score = score + 5
+	timeKeepSec = timeKeepSec + 1
+	if(timeKeepSec%60 == 0 and timeKeepSec ~= 0) then
+		timeKeepMin = timeKeepMin + 1
+	end
+	display.remove(cheese)
+	cheese = display.newText(  "Time: "..timeKeepMin..": "..(timeKeepSec%60), 50, 125, nil, 20 )
+	display.remove(bdis)
+	bdis = display.newText(  "Best Score: "..bestScore, 80, 150, nil, 20 )
 	
 end
 -- heart of the game
@@ -519,7 +544,9 @@ function startGame()
 createShip()
 --backgroundMusic()
 createCurvingEnemy()
-
+did = display.newText(  "Difficulty: "..state, 50, 100, nil, 12 )
+cheese = display.newText(  "Time: "..timeKeepMin..": "..(timeKeepSec%60), 50, 125, nil, 20 )
+bdis = display.newText(  "Best Score: "..bestScore, 80, 150, nil, 20 )
 shootbtn:addEventListener ( "tap", shoot )
 rightArrow:addEventListener ("touch", rightArrowtouch)
 leftArrow:addEventListener("touch", leftArrowtouch)
@@ -534,6 +561,7 @@ timer.performWithDelay(2000, ammoStatus,0)
 timer.performWithDelay ( 5000, setAmmoOn, 0 )
 timer.performWithDelay(300, checkforProgress,0)
 timer.performWithDelay(10*curveMod, aplyCurve,0)
+timer.performWithDelay(1000, timeKeep, 0)
 
 
 

@@ -405,6 +405,9 @@ function onCollision(event)
 				score = math.floor(score * .9)
 			else 
 				score = score - 100
+				if score <0 then
+					score=0
+				end
 			end
 			event.object2:removeSelf()
 			event.object2.myName=nil
@@ -652,13 +655,13 @@ function gameLoop()
 		scoreMod = 2
 		maxShots = 3
 		maxSpawn = 3
-	elseif (state == "hard")then 
+	elseif(state == "hard") then 
 		ammoOk = true
 		curveOk = true
 		curveMod = math.floor(math.random(1,5))
 		scoreMod = 3
-		maxShots = 1
-		maxSpawn = 5
+		maxShots = 2
+		maxSpawn = math.floor(math.log(score/100)/math.log(2))
 	end 
 	moveShip()
 	 

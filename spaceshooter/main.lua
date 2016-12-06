@@ -175,7 +175,7 @@ local backgroundsnd = audio.loadStream ( "musicbackground.mp3")
 				bullet.y = ship.y 
 				bullet.myName = "bullet"
 				textBullets.text = "Bullets "..numBullets
-				transition.to ( bullet, { time = 1000, x = ship.x, y =-100} )
+				transition.to ( bullet, { time = 2000, x = ship.x, y =-1000} )
 
 
 
@@ -191,7 +191,7 @@ local backgroundsnd = audio.loadStream ( "musicbackground.mp3")
 				bullet.y = ship.y 
 				bullet.myName = "bullet"
 				textBullets.text = "Bullets "..numBullets
-				transition.to ( bullet, { time = 1000, x = ship.x, y =-100} )
+				transition.to ( bullet, { time = 2000, x = ship.x, y =-1000} )
 
 
 
@@ -243,7 +243,7 @@ function createSmallCurvingEnemy( )
 		  	enemies	:toFront()
 			enemyArray[numEnemy]  = display.newImage("asteroid_small.png")
 			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=1})
-			enemyArray[numEnemy] .myName = "curvingEnemy" 
+			enemyArray[numEnemy] .myName = "smallCurvingEnemy" 
 			startlocationX = math.random (0, display.contentWidth)
 			enemyArray[numEnemy] .x = startlocationX
 			startlocationY = math.random (-500, -100)
@@ -258,7 +258,7 @@ function createMediumCurvingEnemy( )
 		  	enemies	:toFront()
 			enemyArray[numEnemy]  = display.newImage("asteroid_medium.png")
 			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=1})
-			enemyArray[numEnemy] .myName = "curvingEnemy" 
+			enemyArray[numEnemy] .myName = "mediumCurvingEnemy" 
 			startlocationX = math.random (0, display.contentWidth)
 			enemyArray[numEnemy] .x = startlocationX
 			startlocationY = math.random (-500, -100)
@@ -273,7 +273,7 @@ function createLargeCurvingEnemy( )
 		  	enemies	:toFront()
 			enemyArray[numEnemy]  = display.newImage("asteroid_large.png")
 			physics.addBody ( enemyArray[numEnemy] , {density=0.5, friction=0, bounce=1})
-			enemyArray[numEnemy] .myName = "curvingEnemy" 
+			enemyArray[numEnemy] .myName = "largeCurvingEnemy" 
 			startlocationX = math.random (0, display.contentWidth)
 			enemyArray[numEnemy] .x = startlocationX
 			startlocationY = math.random (-500, -100)
@@ -385,7 +385,7 @@ end
 			bullet.y = ship.y 
 			bullet.myName = "bullet"
 			textBullets.text = "Bullets "..numBullets
-			transition.to ( bullet, { time = 1000, x = ship.x, y =-100} )
+			transition.to ( bullet, { time = 2000, x = ship.x, y =-1000} )
 			audio.play(shot)
 		end 
 		
@@ -434,28 +434,48 @@ function onCollision(event)
 	end
 
 	if((event.object1.myName=="enemy" or string.find(event.object1.myName, "Enemy")) and event.object2.myName=="bullet")  then
-			event.object1:removeSelf()
-			event.object1.myName=nil
+			
 			--event.object2:removeSelf()
 			--event.object2.myName=nil
-			score = score + (10*scoreMod)
+			bonus = 10*scoreMod
+			if string.find(event.object1.myName, "Curving") then
+			bonus = bonus*2 
+			end
+			if string.find(event.object1.myName, "medium") then
+			bonus = bonus * 2
+			elseif string.find(event.object1.myName, "small") then
+			bonus = bonus * 3
+			end
+			score = score + bonus
 			textScore.text = "Score: "..score
 			numHit = numHit + 1
 			--totalBull = totalBull -1
-			print ("numhit "..numHit)
+			event.object1:removeSelf()
+			event.object1.myName=nil
+			print ("numhit "..numHit .. " bonus get: ".. bonus  )
 	end
 	
-		if(event.object1.myName=="bullet" and (event.object2.myName=="enemy" or string.find(event.object2.myName, "Enemy") )) then
-			--event.object1:removeSelf()
-			--event.object1.myName=nil
-			event.object2:removeSelf()
-			event.object2.myName=nil
-			score = score + 10
-			textScore.text = "Score: "..score
-			numHit = numHit + 1
-			--totalBull = totalBull -1
-			print ("numhit "..numHit)
+	if(event.object1.myName=="bullet" and (event.object2.myName=="enemy" or string.find(event.object2.myName, "Enemy") )) then
+		--event.object1:removeSelf()
+		--event.object1.myName=nil
+		
+		bonus = 10*scoreMod
+		if string.find(event.object1.myName, "Curving") then
+			bonus = bonus*2 
 		end
+		if string.find(event.object1.myName, "medium") then
+			bonus = bonus * 2
+		elseif string.find(event.object1.myName, "small") then
+			bonus = bonus * 3
+		end
+		score = score + bonus
+		textScore.text = "Score: "..score
+		numHit = numHit + 1
+		--totalBull = totalBull -1
+		event.object2:removeSelf()
+		event.object2.myName=nil
+		print ("numhit "..numHit .. " bonus get: ".. bonus  )
+	end
 	
 	
 end

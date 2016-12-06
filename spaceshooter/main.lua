@@ -26,6 +26,12 @@ local numEnemy = 0
 local enemyArray = {}
 local totalBull = 0
 local bullArray = {}
+local state = "easy"
+local curveMod = 1
+local maxShots = 5
+local curveOk = false
+local ammoOk = false
+local scoreMod = 1
 --add enemy arrays for other types of enemies
 local onCollision
 local score = 0
@@ -127,40 +133,55 @@ local backgroundsnd = audio.loadStream ( "musicbackground.mp3")
 			ship.x = ship.x + speed
 		end
 
-<<<<<<< HEAD
-
-		
-		if(event.keyName == "space") and(totalBull <3) then
-			--numBullets = numBullets - 1
-
-=======
-		if(event.keyName == "space") and (numBullets ~= 0) then
-			numBullets = numBullets - 1
->>>>>>> origin/master
-			local bullet = display.newImage("bullet.png")
-			physics.addBody(bullet, "static", {density = 1, friction = 0, bounce = 0});
-			totalBull = totalBull +1
-			
-			bullet.x = ship.x 
-			bullet.y = ship.y 
-			bullet.myName = "bullet"
-			textBullets.text = "Bullets "..numBullets
-			transition.to ( bullet, { time = 1000, x = ship.x, y =-100} )
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
-			table.insert(bullArray,bullet)
-
-			audio.play(shot)
+		if(event.keyName == "up" and ship.y > display.contentHeight - 200) then
+			ship.y = ship.y - speed
+		elseif (event.keyName == "down" and ship.y < display.contentHeight ) then
+			ship.y = ship.y + speed
 		end
 
-<<<<<<< HEAD
+		
+		if(event.keyName == "space") and(totalBull <maxShots) then
+			--numBullets = numBullets - 1
+			if(state == "hard" and numBullets ~= 0) then
+				numBullets = numBullets - 1
+				local bullet = display.newImage("bullet.png")
+				physics.addBody(bullet, "static", {density = 1, friction = 0, bounce = 0});
+				totalBull = totalBull +1
+				
+				bullet.x = ship.x 
+				bullet.y = ship.y 
+				bullet.myName = "bullet"
+				textBullets.text = "Bullets "..numBullets
+				transition.to ( bullet, { time = 1000, x = ship.x, y =-100} )
+
+
+
+				table.insert(bullArray,bullet)
+
+				audio.play(shot)
+			else 
+				local bullet = display.newImage("bullet.png")
+				physics.addBody(bullet, "static", {density = 1, friction = 0, bounce = 0});
+				totalBull = totalBull +1
+				
+				bullet.x = ship.x 
+				bullet.y = ship.y 
+				bullet.myName = "bullet"
+				textBullets.text = "Bullets "..numBullets
+				transition.to ( bullet, { time = 1000, x = ship.x, y =-100} )
+
+
+
+				table.insert(bullArray,bullet)
+
+				audio.play(shot)
+			end
+		end
+
+
 		--end 
 
-		
-=======
->>>>>>> origin/master
+
 
 		-- IMPORTANT! Return false to indicate that this app is NOT overriding the received key
 		-- This lets the operating system execute its default handling of the key
@@ -190,7 +211,7 @@ function createCurvingEnemy( )
 			startlocationY = math.random (-500, -100)
 			enemyArray[numEnemy] .y = startlocationY
 		
-			transition.to ( enemyArray[numEnemy] , { time = math.random (12000, 20000), x= math.random (0, display.contentWidth ), y=ship.y+500 } )
+			transition.to ( enemyArray[numEnemy] , { time = math.random (2000, 8000), x= math.random (0, display.contentWidth ), y=ship.y+500 } )
 			enemies:insert(enemyArray[numEnemy] )
 end
 
@@ -204,10 +225,10 @@ function createEnemy()
 			enemyArray[numEnemy] .myName = "enemy" 
 			startlocationX = math.random (0, display.contentWidth)
 			enemyArray[numEnemy] .x = startlocationX
-			startlocationY = math.random (-500, -100)
+			startlocationY = math.random (-100, -25)
 			enemyArray[numEnemy] .y = startlocationY
 			
-			transition.to ( enemyArray[numEnemy] , { time = math.random (12000, 20000), x= math.random (0, display.contentWidth ), y=ship.y+500 } )
+			transition.to ( enemyArray[numEnemy] , { time = math.random (8000, 15000), x= math.random (0, display.contentWidth ), y=ship.y+500 } )
 			enemies:insert(enemyArray[numEnemy] )
 end
 
@@ -255,9 +276,15 @@ function onCollision(event)
 	if(event.object1.myName =="ship" and (event.object2.myName=="enemy" or event.object2.myName=="curvingEnemy" )) then	
 			
 			
-			local function setgameOver()
-			gameovertxt = display.newText(  "Game Over", cWidth-110, cHeight-100, "Arcade", 50 )
-			gameovertxt:addEventListener("tap",  newGame)
+			--local function setgameOver()
+			--gameovertxt = display.newText(  "Game Over", cWidth-110, cHeight-100, "Arcade", 50 )
+			--gameovertxt:addEventListener("tap",  newGame)
+			if(score > 1000 and state == "hard") then
+				score = score * .75
+			elseif (score > 1000 and state == "medium") then
+				score = score * .75
+			else 
+				score = score - 100
 			end
 			-- use setgameover after transition complete to avoid that user clicks gameover before the transition is completed
 			transition.to( ship, { time=1500, xScale = 0.4, yScale = 0.4, alpha=0, onComplete=setgameOver  } )
@@ -289,7 +316,7 @@ function onCollision(event)
 			event.object1.myName=nil
 			--event.object2:removeSelf()
 			--event.object2.myName=nil
-			score = score + 10
+			score = score + (10*scoreMod)
 			textScore.text = "Score: "..score
 			numHit = numHit + 1
 			--totalBull = totalBull -1
@@ -346,12 +373,15 @@ end
 function setAmmoOn()
 		AmmoActive = true
 end
-
+-- controls spawning of ammo and enemies. bullets only apply when on hard mode
 function ammoStatus()
 	
 	if gameActive then
 		createEnemy()
-		if AmmoActive then
+		if(curveOk) then
+			createCurvingEnemy()
+		end
+		if AmmoActive and ammoOk then
 			if (numBullets == 0) then
 		 	createAmmo()
 		 	AmmoActive = false 	
@@ -387,7 +417,7 @@ local function aplyCurve( )
 end
 
 local function checkforProgress()
-		if numHit == (waveProgress*2+1) then
+		if numHit == (math.floor(math.exp(waveProgress*2+1)-waveProgress*2+3)) then
 			gameActive = false
 			audio.play(wavesnd)
 			removeEnemies()
@@ -434,13 +464,36 @@ function gameLoop()
 			end
 		end
 	end
---	if then
-	--elseif then
-	--elseif then 
-	--else then
-		----add things for easy mode aka intial mode
-		
-	--end 
+	
+	if(score > 100 and score < 200) then
+		state = "medium"
+	elseif(score >300 ) then
+		state = "hard"
+	else 
+		state = "easy"
+	end 
+	
+	
+	if (state == "easy")then
+		curveOk = false
+		ammoOk = false
+		scoreMod = 1
+		maxShots = 5
+	elseif(state == "medium") then
+		ammoOk = false
+		curveOk = true
+		curveMod = 1
+		scoreMod = 2
+		maxShots = 3
+	elseif (state == "hard")then 
+		ammoOk = true
+		curveOk = true
+		curveMod = math.floor(math.random(1,20))
+		scoreMod = 3
+		maxShots = 1
+	end 
+	
+	
 end
 -- heart of the game
 function startGame()
@@ -458,10 +511,10 @@ Runtime:addEventListener("collision" , onCollision)
 Runtime:addEventListener( "key", onKeyEvent )
 Runtime:addEventListener("enterFrame", gameLoop)
 
-timer.performWithDelay(5000, ammoStatus,0)
+timer.performWithDelay(2000, ammoStatus,0)
 timer.performWithDelay ( 5000, setAmmoOn, 0 )
 timer.performWithDelay(300, checkforProgress,0)
-timer.performWithDelay(10, aplyCurve,0)
+timer.performWithDelay(10*curveMod, aplyCurve,0)
 
 
 

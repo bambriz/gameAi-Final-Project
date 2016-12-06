@@ -19,8 +19,9 @@ local gameActive = true
 local waveProgress = 1
 local numHit = 0
 local shipMoveX = 0
+local shipMoveY = 0
 local ship 
-local speed = 20 
+local speed = 10
 local shootbtn
 local numEnemy = 0
 local enemyArray = {}
@@ -32,6 +33,7 @@ local maxShots = 5
 local curveOk = false
 local ammoOk = false
 local scoreMod = 1
+local maxSpawn = 2
 --add enemy arrays for other types of enemies
 local onCollision
 local score = 0
@@ -96,6 +98,7 @@ local backgroundsnd = audio.loadStream ( "musicbackground.mp3")
 
 	local function moveShip(event)
 		ship.x = ship.x + shipMoveX
+		
 	end
 	
 
@@ -121,26 +124,31 @@ local backgroundsnd = audio.loadStream ( "musicbackground.mp3")
 	-- this will be the PC controls
 	-- Called when a key event has been received
 	local function onKeyEvent( event )
-		
+		if(event.phase == "up" and event.keyName ~= "space") then
+			shipMoveX = 0
+			shipMoveY = 0
+		end
 
 		-- If the "back" key was pressed on Android or Windows Phone, prevent it from backing out of the app
-		if ( event.keyName == "left" ) then
-			
-				ship.x = ship.x - speed
-			
+		if ( event.keyName == "left" )and(event.phase == "down") then
+			    
+					shipMoveX =  - speed
+				
 		
-		elseif(event.keyName == "right") then
-			ship.x = ship.x + speed
+		elseif(event.keyName == "right") and(event.phase == "down") then
+			
+			 shipMoveX = speed
+			
 		end
 
-		if(event.keyName == "up" and ship.y > display.contentHeight - 200) then
-			ship.y = ship.y - speed
-		elseif (event.keyName == "down" and ship.y < display.contentHeight ) then
-			ship.y = ship.y + speed
+		if(event.keyName == "up" and ship.y > display.contentHeight - 200 and(event.phase == "down") ) then
+			ship.y = ship.y  - speed*3
+		elseif (event.keyName == "down" and ship.y < display.contentHeight and(event.phase == "down")  ) then
+			ship.y = ship.y + speed*3
 		end
 
 		
-		if(event.keyName == "space") and(totalBull <maxShots) then
+		if(event.keyName == "space") and(totalBull <maxShots) and(event.phase == "down") then
 			--numBullets = numBullets - 1
 			if(state == "hard" and numBullets ~= 0) then
 				numBullets = numBullets - 1
@@ -279,19 +287,19 @@ function onCollision(event)
 			--local function setgameOver()
 			--gameovertxt = display.newText(  "Game Over", cWidth-110, cHeight-100, "Arcade", 50 )
 			--gameovertxt:addEventListener("tap",  newGame)
-			if(score > 1000 and state == "hard") then
-				score = score * .75
+			if(score > 1500 and state == "hard") then
+				score =math.floor( score * .75)
 			elseif (score > 1000 and state == "medium") then
-				score = score * .75
+				score = math.floor(score * .9)
 			else 
 				score = score - 100
 			end
 			-- use setgameover after transition complete to avoid that user clicks gameover before the transition is completed
-			transition.to( ship, { time=1500, xScale = 0.4, yScale = 0.4, alpha=0, onComplete=setgameOver  } )
-			gameActive = false
-			removeEnemies()
-			audio.fadeOut(backgroundsnd)
-			audio.rewind (backgroundsnd)
+			--transition.to( ship, { time=1500, xScale = 0.4, yScale = 0.4, alpha=0, onComplete=setgameOver  } )
+			--gameActive = false
+			--removeEnemies()
+			--audio.fadeOut(backgroundsnd)
+			--audio.rewind (backgroundsnd)
 			
 	end	
 	
@@ -377,9 +385,13 @@ end
 function ammoStatus()
 	
 	if gameActive then
-		createEnemy()
+		for i =1, maxSpawn do
+			createEnemy()
+		end
 		if(curveOk) then
-			createCurvingEnemy()
+			for i=1, maxSpawn-2 do
+				createCurvingEnemy()
+			end
 		end
 		if AmmoActive and ammoOk then
 			if (numBullets == 0) then
@@ -435,7 +447,7 @@ local function checkforProgress()
 			if(enemyArray[i].y > display.contentHeight) then
 			    enemyArray[i]:removeSelf()
 			    enemyArray[i].myName = nil
-				score = score - 20 
+				score = score - (20*scoreMod) 
 				textScore.text = "Score: "..score
 				warningTxt = display.newText(  "Watch out!", cWidth-42, ship.y-50, nil, 12 )
 					local function showWarning()
@@ -465,9 +477,9 @@ function gameLoop()
 		end
 	end
 	
-	if(score > 100 and score < 200) then
+	if(score > 500 and score < 1500) then
 		state = "medium"
-	elseif(score >300 ) then
+	elseif(score >=1500 ) then
 		state = "hard"
 	else 
 		state = "easy"
@@ -479,20 +491,27 @@ function gameLoop()
 		ammoOk = false
 		scoreMod = 1
 		maxShots = 5
+		if(score <100) then
+			maxSpawn = 1
+		else 
+			maxSpawn = 2
+		end
 	elseif(state == "medium") then
 		ammoOk = false
 		curveOk = true
 		curveMod = 1
 		scoreMod = 2
 		maxShots = 3
+		maxSpawn = 3
 	elseif (state == "hard")then 
 		ammoOk = true
 		curveOk = true
-		curveMod = math.floor(math.random(1,20))
+		curveMod = math.floor(math.random(1,5))
 		scoreMod = 3
 		maxShots = 1
+		maxSpawn = 5
 	end 
-	
+	moveShip()
 	
 end
 -- heart of the game

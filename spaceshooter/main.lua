@@ -76,7 +76,7 @@ local timeKeep
 local shot = audio.loadSound ("laserbeam.mp3")
 local wavesnd = audio.loadSound ("wave.mp3")
 local ammosnd = audio.loadSound ("ammo.mp3")
-local backgroundsnd = audio.loadStream ( "musicbackground.mp3")
+local backgroundsnd = audio.loadStream ( "musicbackground.wav")
 
 
 	-- background
@@ -85,22 +85,22 @@ local backgroundsnd = audio.loadStream ( "musicbackground.mp3")
 	background.y = cHeight
 	
 	-- score 
-	textScore = display.newText("Score: "..score, 10, 10, nil, 12)
-	textWave = display.newText ("Wave: "..waveProgress, 10, 30, nil, 12)
-	textBullets = display.newText ("Bullets: "..numBullets, 10, 50, nil, 12)
+	textScore = display.newText("Score: "..score, 50, 10, nil, 12)
+	textWave = display.newText ("Wave: "..waveProgress, 50, 30, nil, 12)
+	textBullets = display.newText ("Bullets: "..numBullets, 50, 50, nil, 12)
 
 	-- set gamepad of the game
 	local leftArrow = display.newImage("left.png")
-	leftArrow.x = 30
-	leftArrow.y = display.contentHeight - 30
+	leftArrow.x = 60
+	leftArrow.y = display.contentHeight - 50
 	local rightArrow = display.newImage("right.png")
-	rightArrow.x = 80
-	rightArrow.y =display.contentHeight -30
+	rightArrow.x = 250
+	rightArrow.y =display.contentHeight -50
 	
 	-- create shootbutton
 	shootbtn = display.newImage("shootbutton.png")
-	shootbtn.x = display.contentWidth -33
-	shootbtn.y = display.contentHeight -33
+	shootbtn.x = display.contentWidth -80
+	shootbtn.y = display.contentHeight -65
 	
 	
 	-- create gamepad
@@ -219,7 +219,7 @@ function createShip()
 	ship = display.newImage ("ship.png")
 	physics.addBody(ship, "static", {density = 1, friction = 0, bounce = 0});
 	ship.x = cWidth
-	ship.y = display.contentHeight - 80
+	ship.y = display.contentHeight - 150
 	ship.myName = "ship"
 end
 function createCurvingEnemy( )
@@ -377,16 +377,41 @@ end
 
 	function shoot(event)
 		
-		if (numBullets ~= 0) then
-			numBullets = numBullets - 1
-			local bullet = display.newImage("bullet.png")
-			physics.addBody(bullet, "static", {density = 1, friction = 0, bounce = 0});
-			bullet.x = ship.x 
-			bullet.y = ship.y 
-			bullet.myName = "bullet"
-			textBullets.text = "Bullets "..numBullets
-			transition.to ( bullet, { time = 2000, x = ship.x, y =-1000} )
-			audio.play(shot)
+		if (totalBull < maxShots) then
+			if(state == "hard" and numBullets ~= 0) then
+				numBullets = numBullets - 1
+				local bullet = display.newImage("bullet.png")
+				physics.addBody(bullet, "static", {density = 1, friction = 0, bounce = 0});
+				totalBull = totalBull +1
+				
+				bullet.x = ship.x 
+				bullet.y = ship.y 
+				bullet.myName = "bullet"
+				textBullets.text = "Bullets "..numBullets
+				transition.to ( bullet, { time = 2000, x = ship.x, y =-1000} )
+
+
+
+				table.insert(bullArray,bullet)
+
+				audio.play(shot)
+			else 
+				local bullet = display.newImage("bullet.png")
+				physics.addBody(bullet, "static", {density = 1, friction = 0, bounce = 0});
+				totalBull = totalBull +1
+				
+				bullet.x = ship.x 
+				bullet.y = ship.y 
+				bullet.myName = "bullet"
+				textBullets.text = "Bullets "..numBullets
+				transition.to ( bullet, { time = 2000, x = ship.x, y =-1000} )
+
+
+
+				table.insert(bullArray,bullet)
+
+				audio.play(shot)
+			end
 		end 
 		
 	end
@@ -685,7 +710,7 @@ end
 -- heart of the game
 function startGame()
 createShip()
---backgroundMusic()
+backgroundMusic()
 
 createCurvingEnemy()
 did = display.newText(  "Difficulty: "..state, 50, 100, nil, 12 )
